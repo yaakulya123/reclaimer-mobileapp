@@ -2,14 +2,14 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import { ArrowRight, CheckCircle, ScanLine, Share2 } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, ScrollView, Share, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { FadeInDown, FadeInUp, ZoomIn } from 'react-native-reanimated';
+import { ActivityIndicator, Animated, Dimensions, PanResponder, ScrollView, Share, StyleSheet, TouchableOpacity } from 'react-native';
+import { FadeInDown, FadeInUp, ZoomIn } from 'react-native-reanimated';
 
 import { Text, View } from '@/components/Themed';
 import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default function ScanScreen() {
     const colorScheme = useColorScheme();
@@ -19,6 +19,64 @@ export default function ScanScreen() {
     const [scanning, setScanning] = useState(false);
     const [success, setSuccess] = useState(false);
     const [permission, requestPermission] = useCameraPermissions();
+
+    // Bottom Sheet Animation State
+    // Initial state: Pushed down by 40% of screen height (leaving 45% visible if total is 85%)
+    const SHEET_MAX_HEIGHT = height * 0.85;
+    const SHEET_MIN_HEIGHT = height * 0.45;
+    const MAX_TRANSLATE_Y = - (SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
+
+    const translateY = React.useRef(new Animated.Value(0)).current;
+    // 0 = Collapsed (Default position defined in styles)
+    // Negative value = Moving Up
+
+    const context = React.useRef({ y: 0 });
+
+    const panResponder = React.useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onMoveShouldSetPanResponder: () => true,
+            onPanResponderGrant: () => {
+                context.current.y = (translateY as any)._value; // Get current animated value
+            },
+            onPanResponderMove: (_, gestureState) => {
+                // Calculate new position
+                let newY = context.current.y + gestureState.dy;
+
+                // Limit the drag range
+                // newY cannot be greater than 0 (which is the collapsed state)
+                // newY cannot be less than MAX_TRANSLATE_Y (which is the expanded state)
+                if (newY > 0) newY = 0;
+                if (newY < MAX_TRANSLATE_Y) newY = MAX_TRANSLATE_Y;
+
+                translateY.setValue(newY);
+            },
+            onPanResponderRelease: (_, gestureState) => {
+                // Snap Logic
+                // If dragged up significantly (gestureState.dy < -50) or is past midpoint -> Snap to Top
+                // Else Snap back to Bottom
+
+                const currentY = (translateY as any)._value;
+                const snapThreshold = MAX_TRANSLATE_Y / 2;
+
+                if (gestureState.dy < -50 || (gestureState.dy < 0 && currentY < snapThreshold)) {
+                    // Snap to Top (Expanded)
+                    Animated.spring(translateY, {
+                        toValue: MAX_TRANSLATE_Y,
+                        useNativeDriver: true,
+                        damping: 20,
+                    }).start();
+                } else {
+                    // Snap to Bottom (Collapsed)
+                    Animated.spring(translateY, {
+                        toValue: 0,
+                        useNativeDriver: true,
+                        damping: 20,
+                    }).start();
+                }
+            },
+        })
+    ).current;
 
     useEffect(() => {
         if (permission && !permission.granted) {
@@ -85,6 +143,7 @@ export default function ScanScreen() {
         return (
             <View style={[styles.container, { backgroundColor: theme.background, justifyContent: 'space-between', paddingVertical: 60 }]}>
                 <View style={{ alignItems: 'center', marginTop: 40 }}>
+                    {/* Reanimated is used here correctly for success animations */}
                     <Animated.View entering={ZoomIn.duration(600).springify()}>
                         <CheckCircle size={100} color={theme.primary} />
                     </Animated.View>
@@ -136,9 +195,12 @@ export default function ScanScreen() {
             <CameraView style={StyleSheet.absoluteFill} facing="back" />
 
             {/* 2. Scanning Overlay Layer - Absolute on top of Camera */}
-            <View style={[styles.overlayContainer, StyleSheet.absoluteFill]}>
+            <View style={[styles.overlayContainer, StyleSheet.absoluteFill]} pointerEvents="box-none">
+                {/* PointerEvents box-none allows touches to pass through empty areas to the camera/bottom sheet */}
+
                 {/* Dark Mask for Camera */}
-                <View style={styles.maskContainer}>
+                <View style={[styles.maskContainer]} pointerEvents="none">
+                    {/* pointerEvents none here so mask doesn't block interactions if we needed any, but mostly for clarity */}
                     <View style={styles.maskRow} />
                     <View style={styles.maskMiddle}>
                         <View style={styles.maskColumn} />
@@ -161,21 +223,38 @@ export default function ScanScreen() {
                 </Text>
             </View>
 
-            {/* 3. Bottom Sheet - Absolute Bottom */}
-            <View style={[styles.bottomSheetContainer, { backgroundColor: theme.card }]}>
-                {/* Drag Handle Visual */}
-                <View style={styles.dragHandleContainer}>
-                    <View style={[styles.dragHandle, { backgroundColor: '#E5E7EB' }]} />
-                </View>
+            {/* 3. Bottom Sheet - Absolute Bottom with Animation */}
+            {/* Note: We use RN's Animated.View here for the PanResponder logic */}
+            <Animated.View
+                style={[
+                    styles.bottomSheetContainer,
+                    {
+                        backgroundColor: theme.card,
+                        transform: [{ translateY: translateY }]
+                    }
+                ]}
+            >
+                {/* Drag Handle Area - Attached PanResponder Here */}
+                <View
+                    style={styles.dragHandleHitSlop}
+                    {...panResponder.panHandlers}
+                >
+                    <View style={styles.dragHandleContainer}>
+                        <View style={[styles.dragHandle, { backgroundColor: '#E5E7EB' }]} />
+                    </View>
 
-                <View style={styles.sheetHeader}>
-                    <Text style={[styles.sheetTitle, { color: theme.text }]}>Recycling Rewards</Text>
-                    <View style={[styles.infoBadge, { backgroundColor: theme.primary + '15' }]}>
-                        <Text style={[styles.infoText, { color: theme.primary }]}>Live Rates</Text>
+                    <View style={styles.sheetHeader}>
+                        <Text style={[styles.sheetTitle, { color: theme.text }]}>Recycling Rewards</Text>
+                        <View style={[styles.infoBadge, { backgroundColor: theme.primary + '15' }]}>
+                            <Text style={[styles.infoText, { color: theme.primary }]}>Live Rates</Text>
+                        </View>
                     </View>
                 </View>
 
-                {/* Scrolable Content */}
+                {/* Scrolable Content - Only enabled when expanded or always enabled? 
+                    If we drag inside scrollview it might conflict. 
+                    Simple solution: Drag handle pulls up, content scrolls normally.
+                */}
                 <ScrollView
                     style={styles.pointsList}
                     showsVerticalScrollIndicator={false}
@@ -214,7 +293,7 @@ export default function ScanScreen() {
                         <View style={[styles.captureInner, { backgroundColor: scanning ? '#9CA3AF' : theme.primary }]} />
                     </TouchableOpacity>
                 </View>
-            </View>
+            </Animated.View>
 
         </View>
     );
@@ -285,7 +364,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: '45%', // Fixed height for simple "bottom sheet" look
+        height: '85%', // Taller to allow dragging up
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
@@ -296,6 +375,10 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
         elevation: 15,
         zIndex: 10,
+    },
+    dragHandleHitSlop: {
+        // Increase touch area for easier dragging
+        paddingBottom: 10,
     },
     dragHandleContainer: {
         alignItems: 'center',
