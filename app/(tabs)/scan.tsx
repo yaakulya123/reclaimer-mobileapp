@@ -21,15 +21,15 @@ export default function ScanScreen() {
     const [permission, requestPermission] = useCameraPermissions();
 
     // Bottom Sheet Animation State
-    // Initial state: Pushed down by 40% of screen height (leaving 45% visible if total is 85%)
-    const SHEET_MAX_HEIGHT = height * 0.85;
-    const SHEET_MIN_HEIGHT = height * 0.45;
-    const MAX_TRANSLATE_Y = - (SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
+    const SCREEN_HEIGHT = height;
+    // Sheet height is 90% of screen
+    const SHEET_HEIGHT = SCREEN_HEIGHT * 0.9;
+    // We want ~35% of the screen visible initially (collapsed)
+    const COLLAPSED_HEIGHT = SCREEN_HEIGHT * 0.35;
+    // We need to push the sheet DOWN by this amount to show only collapsed height
+    const INITIAL_OFFSET = SHEET_HEIGHT - COLLAPSED_HEIGHT;
 
-    const translateY = React.useRef(new Animated.Value(0)).current;
-    // 0 = Collapsed (Default position defined in styles)
-    // Negative value = Moving Up
-
+    const translateY = React.useRef(new Animated.Value(INITIAL_OFFSET)).current;
     const context = React.useRef({ y: 0 });
 
     const panResponder = React.useRef(
@@ -44,32 +44,39 @@ export default function ScanScreen() {
                 let newY = context.current.y + gestureState.dy;
 
                 // Limit the drag range
-                // newY cannot be greater than 0 (which is the collapsed state)
-                // newY cannot be less than MAX_TRANSLATE_Y (which is the expanded state)
-                if (newY > 0) newY = 0;
-                if (newY < MAX_TRANSLATE_Y) newY = MAX_TRANSLATE_Y;
+                // Min value: 0 (Fully Expanded)
+                // Max value: INITIAL_OFFSET (Collapsed)
+                if (newY < 0) newY = 0;
+                if (newY > INITIAL_OFFSET) newY = INITIAL_OFFSET;
 
                 translateY.setValue(newY);
             },
             onPanResponderRelease: (_, gestureState) => {
                 // Snap Logic
-                // If dragged up significantly (gestureState.dy < -50) or is past midpoint -> Snap to Top
-                // Else Snap back to Bottom
+                // If dragged UP (negative dy) significantly or passed midpoint -> Snap to Top (0)
+                // Else Snap to Bottom (INITIAL_OFFSET)
 
                 const currentY = (translateY as any)._value;
-                const snapThreshold = MAX_TRANSLATE_Y / 2;
+                const snapThreshold = INITIAL_OFFSET / 2;
 
                 if (gestureState.dy < -50 || (gestureState.dy < 0 && currentY < snapThreshold)) {
                     // Snap to Top (Expanded)
                     Animated.spring(translateY, {
-                        toValue: MAX_TRANSLATE_Y,
+                        toValue: 0,
+                        useNativeDriver: true,
+                        damping: 20,
+                    }).start();
+                } else if (gestureState.dy > 50 || (gestureState.dy > 0 && currentY > snapThreshold)) {
+                    // Snap to Bottom (Collapsed)
+                    Animated.spring(translateY, {
+                        toValue: INITIAL_OFFSET,
                         useNativeDriver: true,
                         damping: 20,
                     }).start();
                 } else {
-                    // Snap to Bottom (Collapsed)
+                    // Return to nearest
                     Animated.spring(translateY, {
-                        toValue: 0,
+                        toValue: currentY < snapThreshold ? 0 : INITIAL_OFFSET,
                         useNativeDriver: true,
                         damping: 20,
                     }).start();
@@ -223,13 +230,25 @@ export default function ScanScreen() {
                 </Text>
             </View>
 
-            {/* 3. Bottom Sheet - Absolute Bottom with Animation */}
+            {/* 3. Scan Button - FIXED at Bottom (Outside Sheet) */}
+            <View style={styles.fixedButtonContainer}>
+                <TouchableOpacity
+                    style={[styles.captureButton, { borderColor: 'white', backgroundColor: 'rgba(255,255,255,0.2)' }]}
+                    onPress={handleScan}
+                    disabled={scanning}
+                >
+                    <View style={[styles.captureInner, { backgroundColor: scanning ? '#9CA3AF' : theme.primary }]} />
+                </TouchableOpacity>
+            </View>
+
+            {/* 4. Bottom Sheet - Absolute Bottom with Animation */}
             {/* Note: We use RN's Animated.View here for the PanResponder logic */}
             <Animated.View
                 style={[
                     styles.bottomSheetContainer,
                     {
                         backgroundColor: theme.card,
+                        height: SHEET_HEIGHT, // Define explicit height
                         transform: [{ translateY: translateY }]
                     }
                 ]}
@@ -251,14 +270,11 @@ export default function ScanScreen() {
                     </View>
                 </View>
 
-                {/* Scrolable Content - Only enabled when expanded or always enabled? 
-                    If we drag inside scrollview it might conflict. 
-                    Simple solution: Drag handle pulls up, content scrolls normally.
-                */}
+                {/* Scrolable Content - Add padding bottom so it doesn't get cut off if needed */}
                 <ScrollView
                     style={styles.pointsList}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 40 }}
+                    contentContainerStyle={{ paddingBottom: 100 }}
                 >
                     {[
                         { label: 'Plastic Bottles', points: '+5 pts/item', icon: '🥤', color: '#3B82F6', desc: 'PET 1 & HDPE 2' },
@@ -282,17 +298,6 @@ export default function ScanScreen() {
                         </View>
                     ))}
                 </ScrollView>
-
-                {/* Scan Button Floating */}
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        style={[styles.captureButton, { borderColor: theme.border, backgroundColor: theme.background }]}
-                        onPress={handleScan}
-                        disabled={scanning}
-                    >
-                        <View style={[styles.captureInner, { backgroundColor: scanning ? '#9CA3AF' : theme.primary }]} />
-                    </TouchableOpacity>
-                </View>
             </Animated.View>
 
         </View>
@@ -364,7 +369,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: '85%', // Taller to allow dragging up
+        // height is set dynamically now
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
@@ -443,10 +448,15 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: 'bold',
     },
-    buttonContainer: {
+    fixedButtonContainer: {
+        position: 'absolute',
+        bottom: 40,
+        left: 0,
+        right: 0,
         alignItems: 'center',
-        paddingVertical: 20,
+        zIndex: 20, // ensure it's above the sheet
     },
+    // Removed old buttonContainer since it's now fixed
     captureButton: {
         width: 70,
         height: 70,
@@ -454,6 +464,11 @@ const styles = StyleSheet.create({
         borderWidth: 4,
         alignItems: 'center',
         justifyContent: 'center',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 6,
     },
     captureInner: {
         width: 54,
