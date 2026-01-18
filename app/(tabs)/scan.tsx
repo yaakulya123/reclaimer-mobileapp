@@ -132,36 +132,38 @@ export default function ScanScreen() {
 
     return (
         <View style={styles.container}>
-            {/* Real Camera View */}
-            <View style={styles.cameraContainer}>
-                <CameraView style={{ flex: 1 }} facing="back">
-                    {/* Darker Overlay outside frame */}
-                    <View style={styles.maskContainer}>
-                        <View style={styles.maskRow} />
-                        <View style={styles.maskMiddle}>
-                            <View style={styles.maskColumn} />
-                            <View style={styles.scannerFrame}>
-                                <ScanLine size={280} color={scanning ? theme.primary : 'white'} strokeWidth={1.5} />
-                                {scanning && <ActivityIndicator size="large" color={theme.primary} style={{ position: 'absolute' }} />}
-                                <View style={styles.cornerTopLeft} />
-                                <View style={styles.cornerTopRight} />
-                                <View style={styles.cornerBottomLeft} />
-                                <View style={styles.cornerBottomRight} />
-                            </View>
-                            <View style={styles.maskColumn} />
-                        </View>
-                        <View style={styles.maskRow} />
-                    </View>
+            {/* 1. Camera Layer - Full Screen Background */}
+            <CameraView style={StyleSheet.absoluteFill} facing="back" />
 
-                    <Text style={styles.frameText}>
-                        Align QR code within the frame to deposit
-                    </Text>
-                </CameraView>
+            {/* 2. Scanning Overlay Layer - Absolute on top of Camera */}
+            <View style={[styles.overlayContainer, StyleSheet.absoluteFill]}>
+                {/* Dark Mask for Camera */}
+                <View style={styles.maskContainer}>
+                    <View style={styles.maskRow} />
+                    <View style={styles.maskMiddle}>
+                        <View style={styles.maskColumn} />
+                        <View style={styles.scannerFrame}>
+                            <ScanLine size={280} color={scanning ? theme.primary : 'white'} strokeWidth={1.5} />
+                            {scanning && <ActivityIndicator size="large" color={theme.primary} style={{ position: 'absolute' }} />}
+                            <View style={styles.cornerTopLeft} />
+                            <View style={styles.cornerTopRight} />
+                            <View style={styles.cornerBottomLeft} />
+                            <View style={styles.cornerBottomRight} />
+                        </View>
+                        <View style={styles.maskColumn} />
+                    </View>
+                    <View style={styles.maskRow} />
+                </View>
+
+                {/* Helper Text positioned in the open area */}
+                <Text style={styles.frameText}>
+                    Align QR code within the frame to deposit
+                </Text>
             </View>
 
-            {/* Premium Bottom Sheet Overlay */}
-            <View style={[styles.bottomSheet, { backgroundColor: theme.card }]}>
-                {/* Drag Handle */}
+            {/* 3. Bottom Sheet - Absolute Bottom */}
+            <View style={[styles.bottomSheetContainer, { backgroundColor: theme.card }]}>
+                {/* Drag Handle Visual */}
                 <View style={styles.dragHandleContainer}>
                     <View style={[styles.dragHandle, { backgroundColor: '#E5E7EB' }]} />
                 </View>
@@ -173,17 +175,19 @@ export default function ScanScreen() {
                     </View>
                 </View>
 
-                {/* Vertical Points List */}
+                {/* Scrolable Content */}
                 <ScrollView
                     style={styles.pointsList}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 20 }}
+                    contentContainerStyle={{ paddingBottom: 40 }}
                 >
                     {[
                         { label: 'Plastic Bottles', points: '+5 pts/item', icon: '🥤', color: '#3B82F6', desc: 'PET 1 & HDPE 2' },
                         { label: 'Aluminum Cans', points: '+10 pts/item', icon: '🥫', color: '#10B981', desc: 'Clean & crushed' },
                         { label: 'Glass Containers', points: '+15 pts/item', icon: '🍾', color: '#F59E0B', desc: 'Remove lids' },
                         { label: 'E-Waste Items', points: '50-100 pts', icon: '📱', color: '#8B5CF6', desc: 'Phones, cables' },
+                        { label: 'Mixed Paper', points: '5 pts/kg', icon: '📰', color: '#9CA3AF', desc: 'Newspapers, magazines' },
+                        { label: 'Cardboard', points: '10 pts/kg', icon: '📦', color: '#D97706', desc: 'Flattened boxes' },
                     ].map((item, index) => (
                         <View key={index} style={[styles.rewardRow, { borderBottomColor: theme.border }]}>
                             <View style={[styles.rewardIconContainer, { backgroundColor: item.color + '15' }]}>
@@ -200,10 +204,10 @@ export default function ScanScreen() {
                     ))}
                 </ScrollView>
 
-                {/* Scan Button (Floating above list) */}
+                {/* Scan Button Floating */}
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                        style={[styles.captureButton, { borderColor: theme.border }]}
+                        style={[styles.captureButton, { borderColor: theme.border, backgroundColor: theme.background }]}
                         onPress={handleScan}
                         disabled={scanning}
                     >
@@ -219,17 +223,20 @@ export default function ScanScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'black', // Camera bg
     },
-    cameraContainer: {
-        flex: 1, // Takes up top space
-        backgroundColor: 'black',
+    // Removed old cameraContainer
+    overlayContainer: {
+        zIndex: 1,
+        justifyContent: 'center',
     },
     maskContainer: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.4)',
+        // The mask fills the overlay container (screen)
     },
     maskRow: {
         flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)', // Darker mask
     },
     maskMiddle: {
         height: 280,
@@ -237,50 +244,58 @@ const styles = StyleSheet.create({
     },
     maskColumn: {
         flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
     },
     scannerFrame: {
         width: 280,
         height: 280,
         justifyContent: 'center',
         alignItems: 'center',
+        // Transparent middle
     },
     frameText: {
         color: 'white',
         textAlign: 'center',
-        fontSize: 14,
-        fontWeight: '500',
-        marginTop: 20,
-        textShadowColor: 'rgba(0,0,0,0.5)',
+        fontSize: 16,
+        fontWeight: '600',
+        position: 'absolute',
+        top: '15%', // Simple top positioning
+        width: '100%',
+        textShadowColor: 'rgba(0,0,0,0.8)',
         textShadowOffset: { width: 0, height: 1 },
         textShadowRadius: 4,
-        position: 'absolute',
-        bottom: 150, // Position above bottom sheet
-        width: '100%',
+        zIndex: 5,
     },
     cornerTopLeft: {
-        position: 'absolute', top: 0, left: 0, width: 40, height: 40, borderTopWidth: 4, borderLeftWidth: 4, borderColor: 'white', borderTopLeftRadius: 20
+        position: 'absolute', top: -2, left: -2, width: 40, height: 40, borderTopWidth: 4, borderLeftWidth: 4, borderColor: '#10B981', borderTopLeftRadius: 20
     },
     cornerTopRight: {
-        position: 'absolute', top: 0, right: 0, width: 40, height: 40, borderTopWidth: 4, borderRightWidth: 4, borderColor: 'white', borderTopRightRadius: 20
+        position: 'absolute', top: -2, right: -2, width: 40, height: 40, borderTopWidth: 4, borderRightWidth: 4, borderColor: '#10B981', borderTopRightRadius: 20
     },
     cornerBottomLeft: {
-        position: 'absolute', bottom: 0, left: 0, width: 40, height: 40, borderBottomWidth: 4, borderLeftWidth: 4, borderColor: 'white', borderBottomLeftRadius: 20
+        position: 'absolute', bottom: -2, left: -2, width: 40, height: 40, borderBottomWidth: 4, borderLeftWidth: 4, borderColor: '#10B981', borderBottomLeftRadius: 20
     },
     cornerBottomRight: {
-        position: 'absolute', bottom: 0, right: 0, width: 40, height: 40, borderBottomWidth: 4, borderRightWidth: 4, borderColor: 'white', borderBottomRightRadius: 20
+        position: 'absolute', bottom: -2, right: -2, width: 40, height: 40, borderBottomWidth: 4, borderRightWidth: 4, borderColor: '#10B981', borderBottomRightRadius: 20
     },
-    bottomSheet: {
-        flex: 1,
+
+    // Bottom Sheet Styling
+    bottomSheetContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '45%', // Fixed height for simple "bottom sheet" look
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
         paddingTop: 10,
-        marginTop: -40, // Overlap camera slightly
         shadowColor: "#000",
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: -5 },
+        shadowOpacity: 0.2,
         shadowRadius: 10,
-        elevation: 10,
+        elevation: 15,
+        zIndex: 10,
     },
     dragHandleContainer: {
         alignItems: 'center',
