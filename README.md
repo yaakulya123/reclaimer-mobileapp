@@ -4,14 +4,6 @@
 > **Hackathon 2026 Submission**  
 > *Sustainable. Social. Rewarding.*
 
-<!-- Placeholder for Demo Video -->
-<div align="center">
-  <a href="https://youtu.be/placeholder">
-    <img src="https://img.youtube.com/vi/placeholder/0.jpg" alt="Watch the Demo" style="border-radius: 15px; width: 100%; max-width: 600px; shadow: 0 4px 8px rgba(0,0,0,0.2);">
-  </a>
-  <p><i>📺 Watch our 2-minute demo video</i></p>
-</div>
-
 ---
 
 ## 🌎 The Mission: Why This Matters
@@ -50,19 +42,27 @@ The core problem isn't just infrastructure—it's **participation**. Recycling i
 
 ---
 
-## 📱 Core Features
+## 🚀 Innovative Features
 
-### 1. Smart Vision Scanning
+### 1. Smart Vision Scanning (Computer Vision)
 *   **AI Recognition**: Instantly detects Plastic (PET), Aluminum, and Glass using `expo-camera`.
 *   **Live Valuation**: Shows real-time point value for every item before you deposit.
 
-### 2. Gamified Ecosystem
+### 2. Gamified Ecosystem (Behavioral Economics)
 *   **Leaderboards**: Compete with friends and your local community.
 *   **Impact Dashboard**: Visualize your CO₂ offset in real-world terms (e.g., "Car miles saved").
 
-### 3. Rewards Wallet
+### 3. Rewards Wallet (FinTech Integration)
 *   **Eco-Points**: Accumulate points for every gram of recycled material.
 *   **Redemption**: Exchange points for store discounts or donate to charity.
+
+### 4. AR "Prep-Check" (Augmented Reality)
+*   **Interactive Guidance**: Not sure if a bottle needs rinsing? Our AR layer overlays 3D instructions directly on the object (e.g., "Remove Cap", "Rinse") to ensure nearly **0% contamination rates**.
+*   **Geolocation Pins**: See floating AR indicators for nearby public bins in crowded spaces.
+
+### 5. Smart-City Grid Integration (IoT)
+*   **Dynamic Routing**: The app talks to Smart Kiosks to detect fill levels. If a bin is full, the app automatically reroutes the user to the next nearest empty kiosk.
+*   **Demand signaling**: Partners can signal high demand for specific materials (e.g., "Need more Aluminum"), temporarily boosting point values (x2 Multiplier) to incentivize collection.
 
 ---
 
@@ -70,20 +70,19 @@ The core problem isn't just infrastructure—it's **participation**. Recycling i
 Built with a modern, scalable architecture to ensure a premium user experience.
 
 ### Frontend Framework
-*   **React Native**: Core framework for cross-platform (iOS/Android) development.
-*   **Expo (SDK 54)**: Managed workflow for rapid iteration and native module access.
-*   **TypeScript**: Statically typed for robust, error-free code.
+*   **React Native** `(v0.81.5)`: Core framework for cross-platform (iOS/Android) development.
+*   **Expo** `(SDK 54)`: Managed workflow for rapid iteration and native module access.
+*   **TypeScript** `(v5.9)`: Statically typed for robust, error-free code.
 
 ### UI & Animations
-*   **Reanimated 3**: High-performance, declarative animations running on the UI thread (60fps).
+*   **Reanimated** `(v3.16)`: High-performance, declarative animations running on the UI thread (60fps).
 *   **Lucide React Native**: Beautiful, consistent vector iconography.
-*   **Custom Design System**: Implemented logically via reusable components in `headers/` and `components/`.
+*   **Custom Design System**: Implemented logically via reusable components.
 
 ### Core Services
-*   **Expo Camera**: Real-time camera stream processing for the scanning interface.
-*   **React Native Maps**: Google Maps integration for the Kiosk Finder feature.
-*   **Expo Router**: File-based routing for seamless deep linking and navigation stacks.
-*   **Location Services**: `expo-location` for real-time user positioning and geofencing.
+*   **Expo Camera** `(v16.0)`: Real-time camera stream processing for the scanning interface.
+*   **React Native Maps** `(v1.20)`: Google Maps integration for the Kiosk Finder feature.
+*   **Expo Router** `(v4.0)`: File-based routing for seamless deep linking.
 
 ---
 
