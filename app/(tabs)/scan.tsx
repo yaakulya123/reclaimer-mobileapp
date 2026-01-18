@@ -135,52 +135,81 @@ export default function ScanScreen() {
             {/* Real Camera View */}
             <View style={styles.cameraContainer}>
                 <CameraView style={{ flex: 1 }} facing="back">
-                    <View style={[styles.scannerFrame, { borderColor: 'white', borderStyle: 'dotted' }]}>
-                        <ScanLine size={280} color={scanning ? theme.primary : 'white'} strokeWidth={1} style={{ opacity: 0.8 }} />
-                        {scanning && <ActivityIndicator size="large" color={theme.primary} style={{ position: 'absolute' }} />}
+                    {/* Darker Overlay outside frame */}
+                    <View style={styles.maskContainer}>
+                        <View style={styles.maskRow} />
+                        <View style={styles.maskMiddle}>
+                            <View style={styles.maskColumn} />
+                            <View style={styles.scannerFrame}>
+                                <ScanLine size={280} color={scanning ? theme.primary : 'white'} strokeWidth={1.5} />
+                                {scanning && <ActivityIndicator size="large" color={theme.primary} style={{ position: 'absolute' }} />}
+                                <View style={styles.cornerTopLeft} />
+                                <View style={styles.cornerTopRight} />
+                                <View style={styles.cornerBottomLeft} />
+                                <View style={styles.cornerBottomRight} />
+                            </View>
+                            <View style={styles.maskColumn} />
+                        </View>
+                        <View style={styles.maskRow} />
                     </View>
-                    <Text style={{ color: 'white', position: 'absolute', bottom: 50, alignSelf: 'center', fontSize: 16, backgroundColor: 'rgba(0,0,0,0.5)', padding: 10, borderRadius: 5 }}>
-                        Align QR Code within frame
+
+                    <Text style={styles.frameText}>
+                        Align QR code within the frame to deposit
                     </Text>
                 </CameraView>
             </View>
 
-            {/* Controls */}
-            <View style={[styles.controls, { backgroundColor: theme.background }]}>
-                <Text style={[styles.instruction, { color: theme.text }]}>Scan Kiosk QR to Deposit</Text>
+            {/* Premium Bottom Sheet Overlay */}
+            <View style={[styles.bottomSheet, { backgroundColor: theme.card }]}>
+                {/* Drag Handle */}
+                <View style={styles.dragHandleContainer}>
+                    <View style={[styles.dragHandle, { backgroundColor: '#E5E7EB' }]} />
+                </View>
 
-                {/* Points Guide - Clean Horizontal Scroll */}
+                <View style={styles.sheetHeader}>
+                    <Text style={[styles.sheetTitle, { color: theme.text }]}>Recycling Rewards</Text>
+                    <View style={[styles.infoBadge, { backgroundColor: theme.primary + '15' }]}>
+                        <Text style={[styles.infoText, { color: theme.primary }]}>Live Rates</Text>
+                    </View>
+                </View>
+
+                {/* Vertical Points List */}
                 <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={{ marginBottom: 25, flexGrow: 0 }}
-                    contentContainerStyle={{ paddingHorizontal: 20 }}
+                    style={styles.pointsList}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 20 }}
                 >
                     {[
-                        { label: 'Electronics', points: '10-50 pts', icon: '📱', color: '#3B82F6', detail: 'Based on size' },
-                        { label: 'Textiles', points: '5 pts/kg', icon: '👕', color: '#10B981', detail: 'Clean clothes' },
-                        { label: 'Bottles', points: '2 pts/item', icon: '🥤', color: '#F59E0B', detail: 'Glass/Plastic' },
-                        { label: 'Bulk Bonus', points: '+20%', icon: '🚀', color: '#8B5CF6', detail: '5+ items' },
+                        { label: 'Plastic Bottles', points: '+5 pts/item', icon: '🥤', color: '#3B82F6', desc: 'PET 1 & HDPE 2' },
+                        { label: 'Aluminum Cans', points: '+10 pts/item', icon: '🥫', color: '#10B981', desc: 'Clean & crushed' },
+                        { label: 'Glass Containers', points: '+15 pts/item', icon: '🍾', color: '#F59E0B', desc: 'Remove lids' },
+                        { label: 'E-Waste Items', points: '50-100 pts', icon: '📱', color: '#8B5CF6', desc: 'Phones, cables' },
                     ].map((item, index) => (
-                        <View key={index} style={[styles.pointCard, { backgroundColor: theme.card, shadowColor: theme.text }]}>
-                            <View style={[styles.pointIcon, { backgroundColor: item.color + '20' }]}>
-                                <Text style={{ fontSize: 20 }}>{item.icon}</Text>
+                        <View key={index} style={[styles.rewardRow, { borderBottomColor: theme.border }]}>
+                            <View style={[styles.rewardIconContainer, { backgroundColor: item.color + '15' }]}>
+                                <Text style={{ fontSize: 24 }}>{item.icon}</Text>
                             </View>
-                            <View>
-                                <Text style={[styles.pointLabel, { color: theme.text }]}>{item.label}</Text>
-                                <Text style={[styles.pointValue, { color: item.color }]}>{item.points}</Text>
+                            <View style={{ flex: 1, marginLeft: 15 }}>
+                                <Text style={[styles.rewardLabel, { color: theme.text }]}>{item.label}</Text>
+                                <Text style={[styles.rewardDesc, { color: '#9CA3AF' }]}>{item.desc}</Text>
+                            </View>
+                            <View style={[styles.pointsPill, { borderColor: item.color }]}>
+                                <Text style={[styles.pointsText, { color: item.color }]}>{item.points}</Text>
                             </View>
                         </View>
                     ))}
                 </ScrollView>
 
-                <TouchableOpacity
-                    style={[styles.captureButton, { borderColor: theme.border }]}
-                    onPress={handleScan}
-                    disabled={scanning}
-                >
-                    <View style={[styles.captureInner, { backgroundColor: scanning ? '#9CA3AF' : theme.primary }]} />
-                </TouchableOpacity>
+                {/* Scan Button (Floating above list) */}
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={[styles.captureButton, { borderColor: theme.border }]}
+                        onPress={handleScan}
+                        disabled={scanning}
+                    >
+                        <View style={[styles.captureInner, { backgroundColor: scanning ? '#9CA3AF' : theme.primary }]} />
+                    </TouchableOpacity>
+                </View>
             </View>
 
         </View>
@@ -192,46 +221,148 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     cameraContainer: {
-        flex: 3,
+        flex: 1, // Takes up top space
         backgroundColor: 'black',
     },
-    scannerFrame: {
+    maskContainer: {
         flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+    },
+    maskRow: {
+        flex: 1,
+    },
+    maskMiddle: {
+        height: 280,
+        flexDirection: 'row',
+    },
+    maskColumn: {
+        flex: 1,
+    },
+    scannerFrame: {
+        width: 280,
+        height: 280,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    controls: {
+    frameText: {
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 14,
+        fontWeight: '500',
+        marginTop: 20,
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 4,
+        position: 'absolute',
+        bottom: 150, // Position above bottom sheet
+        width: '100%',
+    },
+    cornerTopLeft: {
+        position: 'absolute', top: 0, left: 0, width: 40, height: 40, borderTopWidth: 4, borderLeftWidth: 4, borderColor: 'white', borderTopLeftRadius: 20
+    },
+    cornerTopRight: {
+        position: 'absolute', top: 0, right: 0, width: 40, height: 40, borderTopWidth: 4, borderRightWidth: 4, borderColor: 'white', borderTopRightRadius: 20
+    },
+    cornerBottomLeft: {
+        position: 'absolute', bottom: 0, left: 0, width: 40, height: 40, borderBottomWidth: 4, borderLeftWidth: 4, borderColor: 'white', borderBottomLeftRadius: 20
+    },
+    cornerBottomRight: {
+        position: 'absolute', bottom: 0, right: 0, width: 40, height: 40, borderBottomWidth: 4, borderRightWidth: 4, borderColor: 'white', borderBottomRightRadius: 20
+    },
+    bottomSheet: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        marginTop: -30,
+        paddingHorizontal: 20,
+        paddingTop: 10,
+        marginTop: -40, // Overlap camera slightly
         shadowColor: "#000",
         shadowOffset: { width: 0, height: -3 },
         shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 5,
-        zIndex: 10,
+        shadowRadius: 10,
+        elevation: 10,
     },
-    instruction: {
+    dragHandleContainer: {
+        alignItems: 'center',
+        paddingVertical: 10,
+    },
+    dragHandle: {
+        width: 40,
+        height: 5,
+        borderRadius: 2.5,
+    },
+    sheetHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+        marginTop: 10,
+    },
+    sheetTitle: {
         fontSize: 20,
+        fontWeight: 'bold',
+    },
+    infoBadge: {
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 12,
+    },
+    infoText: {
+        fontSize: 12,
+        fontWeight: '700',
+    },
+    pointsList: {
+        flex: 1,
+    },
+    rewardRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 16,
+        borderBottomWidth: 0.5,
+    },
+    rewardIconContainer: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    rewardLabel: {
+        fontSize: 16,
         fontWeight: '600',
-        marginBottom: 30,
+        marginBottom: 2,
+    },
+    rewardDesc: {
+        fontSize: 13,
+    },
+    pointsPill: {
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 20,
+        borderWidth: 1,
+    },
+    pointsText: {
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
+    buttonContainer: {
+        alignItems: 'center',
+        paddingVertical: 20,
     },
     captureButton: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+        width: 70,
+        height: 70,
+        borderRadius: 35,
         borderWidth: 4,
         alignItems: 'center',
         justifyContent: 'center',
     },
     captureInner: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+        width: 54,
+        height: 54,
+        borderRadius: 27,
     },
+    // Keep success styles
     successTitle: {
         fontSize: 32,
         fontWeight: 'bold',
@@ -279,33 +410,4 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 16,
     },
-    pointCard: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 12,
-        borderRadius: 15,
-        marginRight: 10,
-        minWidth: 140,
-        elevation: 2,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-    },
-    pointIcon: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: 10,
-    },
-    pointLabel: {
-        fontSize: 12,
-        fontWeight: '600',
-        marginBottom: 2,
-    },
-    pointValue: {
-        fontSize: 14,
-        fontWeight: 'bold',
-    }
 });
