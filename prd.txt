@@ -1,0 +1,175 @@
+## Overview
+
+Reclaimer is a mobile application that connects individual users to nearby automated recycling kiosks for e-waste, textiles, and beverage containers. The app gamifies recycling through instant point rewards and redeemable incentives, while simultaneously solving operational challenges for recycling partners through data-driven insights and optimized collection logistics.
+
+This PRD complements the executive product document by detailing the core user experience, feature specifications, and implementation priorities for the MVP phase.
+
+---
+
+## User Personas & Core Workflows
+
+### Persona 1: Urban Recycler (Primary User)
+
+**Profile**: Ages 18–35, smartphone-savvy, environmentally conscious, seeks convenience and tangible rewards
+**Core Need**: Easy way to recycle with immediate gratification
+**Success**: Deposits items weekly, earns $10–15/month in rewards, shares achievements socially
+
+**Primary Workflows**:
+
+1. Open app → Browse nearby kiosks on map → Walk to location → Deposit item → See points credited instantly
+2. Accumulate 100 points → Browse gift card partners → Redeem for coffee shop card → Use immediately
+3. Check personal dashboard → See "250kg recycled this year" → Share on social media
+
+### Persona 2: Consistency Achiever (Secondary User)
+
+**Profile**: Ages 30–50, values environmental impact metrics, prefers routine
+**Core Need**: Track progress and see measurable personal environmental contribution
+**Success**: Maintains 3+ deposits/week, earns achievement badges, participates in community leaderboards
+
+**Primary Workflows**:
+
+1. Open dashboard → View "30-day recycling streak" badge → Feel motivated to maintain consistency
+2. Check "CO₂ prevented: 15kg" metric → Share milestone on social media
+3. See local leaderboard ranking → Compete with neighborhood recyclers
+
+### Persona 3: Corporate Participant (Tertiary User)
+
+**Profile**: Employee in company with sustainability program, participates to support workplace goals
+**Core Need**: Simple way to contribute to organizational recycling targets
+**Success**: Participates occasionally, views company leaderboard, earns corporate-branded rewards
+
+**Primary Workflows**:
+
+1. Receive workplace signup link → Join company program in app
+2. Deposit items at convenient kiosk → Points auto-contribute to company goal
+3. See company leaderboard progress → Feel part of larger initiative
+
+---
+
+## Core Product Features (MVP)
+
+### Feature 1: Recycling Kiosk Finder
+
+**What it does**: Interactive map showing nearby automated recycling machines with real-time availability and accepted materials
+
+**User Experience**:
+
+- Map view with kiosk pins color-coded by material type (blue = e-waste, green = textiles, orange = beverages)
+- List view showing kiosks sorted by distance, with operating hours and accepted items
+- Search/filter by material category or kiosk partner
+- One-tap directions integration (Apple Maps / Google Maps)
+- Ratings and user reviews (e.g., "Machine was full on Tuesday 3pm")
+
+**Data Displayed**:
+
+- Location, address, hours
+- Currently accepting materials (real-time sync from kiosk)
+- Partner name (e.g., "EcoPartner Recycling")
+- User ratings and review count
+- Distance from current location
+
+**Technical**: Google Maps API integration, real-time kiosk status via partner API polling
+
+### Feature 2: Deposit & Instant Rewards
+
+**What it does**: Users scan item or kiosk QR code to log recycled materials and instantly earn points
+
+**User Experience**:
+
+- At kiosk: QR code visible on machine or receipt
+- User opens app → "Deposit Now" button → Camera scans QR → Item categorization screen appears
+- User confirms item type and quantity (e.g., "1 smartphone" or "2kg textiles")
+- Points credited instantly (haptic feedback, success animation, notification sound optional)
+- Confirmation screen shows: points earned, total balance, and next reward milestone
+
+**Points Structure**:
+
+- Electronics: 10–50 points depending on size/weight (smartphone = 10, laptop = 50)
+- Textiles: 5 points per kg
+- Beverage containers: 2 points per container
+- Bulk bonus: 20% extra points if 5+ items in single deposit
+
+**Technical**: Kiosk QR encoding, item-to-points mapping logic, secure point ledger
+
+### Feature 3: Digital Wallet & Redemption
+
+**What it does**: Users accumulate points and exchange them for real rewards from partner network
+
+**User Experience**:
+
+- Wallet screen shows current balance (e.g., "245 points")
+- "Available Rewards" section displays redeemable options:
+    - **Retail gift cards** (Starbucks $5 = 100 points, Supermarket $10 = 180 points)
+    - **Physical merchandise** (T-shirt = 150 points, water bottle = 120 points)
+    - **Donation option** (50 points = $5 donated to ocean cleanup project)
+- One-tap redemption → Instant digital code or receipt
+- Redemption history visible in "Past Rewards"
+
+**Incentive Design**:
+
+- Entry-level rewards accessible within 2–3 weeks of regular use (e.g., $3 coffee card = 60 points)
+- Aspirational rewards for committed users (quarterly merchandise drops)
+- Surprise seasonal bonus (e.g., "Double points on Earth Day")
+
+**Technical**: Payment processor integration, reward fulfillment workflow, fraud prevention
+
+### Feature 4: Environmental Impact Dashboard
+
+**What it does**: Personalized visual summary of user's recycling contribution and environmental impact
+
+**User Experience**:
+
+- Dashboard home screen displays:
+    - **Big Number**: "Total items recycled: 47"
+    - **CO₂ Impact**: "CO₂ prevented: 12.3kg" (equivalent: ~20 km car drive avoided)
+    - **Material Recovered**: "Electronics: 8 items | Textiles: 12kg | Containers: 27 items"
+    - **Current Streak**: "Recycled 5 days in a row 🔥"
+    - **Leaderboard rank**: "You're in the top 10% of [City] recyclers"
+- Tap "View Details" → Time-series chart showing deposits per week, materials breakdown, points earned
+- Swipe to "Leaderboard" → See ranked list of local/community recyclers (anonymized, optional opt-in to public ranking)
+
+**Gamification Elements**:
+
+- Achievement badges (e.g., "First Deposit", "100-Item Milestone", "30-Day Streak")
+- Level progression (e.g., "Bronze Recycler" → "Silver" → "Gold" at material milestones)
+- Community goal progress (e.g., "City target: Recycle 10,000kg by year-end | Current: 3,200kg")
+
+**Technical**: Data aggregation from deposit logs, environmental impact calculations, leaderboard ranking engine
+
+### Feature 5: Social Sharing & Referrals
+
+**What it does**: Users share achievements and invite friends to earn bonus points
+
+**User Experience**:
+
+- "Share Achievement" button on milestone unlocks (e.g., "Just recycled my 50th item!")
+- Pre-filled social media posts with app link
+- Referral link unique to user (e.g., "Reclaimer.app/ref/user123")
+- Invitation flow: User sends link → Friend signs up → Both earn 25 bonus points on first deposit
+
+**Benefits**:
+
+- User acquisition through word-of-mouth
+- Community building and social proof
+- Lower marketing costs than paid acquisition
+
+**Technical**: Deep linking, referral code generation, viral loop analytics
+
+### Feature 6: Push Notifications & Engagement
+
+**What it does**: Timely reminders and incentives to maintain recycling habit
+
+**Push Notification Types**:
+
+1. **Streak Reminders** (if 3+ days without deposit): "Your 5-day streak is at risk! Find a kiosk nearby"
+2. **Leaderboard Updates** (weekly): "You've moved up to 7th place! 3 more items to reach 5th"
+3. **Reward Milestones**: "You're 20 points away from a free coffee! Recycle 2 more textiles"
+4. **Seasonal Promotions**: "Double points this weekend on beverages!"
+5. **New Kiosks**: "A new e-waste recycling machine opened 0.5km away"
+6. **Community Challenges**: "City-wide challenge: Recycle 500kg this month for a tree-planting event"
+
+**Frequency & Personalization**:
+
+- Default: 2–3 notifications per week
+- User can adjust frequency in settings (off, low, medium, high)
+- Machine learning to identify optimal send times based on user behavior
