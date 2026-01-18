@@ -1,97 +1,78 @@
-# Reclaimer 🌱  
-**Gamifying the Circular Economy**
+# 🌳 Reclaimer
+**Turning Trash into Treasure for a Greener Planet.**
 
-> **Winners of [Hackathon Name/Category]**  
-> *Making recycling simple, rewarding, and social.*
+> **Hackathon 2026 Submission**  
+> *Sustainable. Social. Rewarding.*
 
-<div align="center">
-  <img src="assets/readme-images/scan_preview.png" width="800" alt="Reclaimer App Showcase" style="border-radius: 20px; box-shadow: 0px 10px 30px rgba(0,0,0,0.2);">
+---
+
+## 🌎 The Mission
+We are facing a global waste crisis. Recycling is often confusing, inconvenient, and unrewarding. **Reclaimer** changes that. 
+
+We minimize the friction of recycling by **gamifying the experience**. By combining **AI-powered scanning**, **real-time impact tracking**, and **financial incentives**, we empower individuals to take measurable climate action—one bottle at a time.
+
+---
+
+## 📱 The Experience
+
+### 1. Smart Vision Scanning & Instant Rewards
+Our core feature utilizes advanced computer vision to identify recyclable materials instantly. No more guessing—just point, scan, and earn.
+*   **AI Recognition**: Instantly detects Plastic (PET), Aluminum, and Glass.
+*   **Live Valuation**: Shows real-time point value for every item.
+*   **Seamless Deposit**: Quick drag-and-drop interface to log your recycling.
+
+### 2. Gamified Ecosystem
+We don't just track waste; we track **impact**. 
+*   **Leaderboards**: Compete with friends and your local community.
+*   **Trophies & Badges**: Earn recognition for consistent habits (Series Streaks, Bulk Depositor).
+*   **Impact Dashboard**: Visualize your CO₂ offset in real-world terms (e.g., "Car miles saved").
+
+### 3. Digital Wallet & Marketplace
+Your eco-efforts have real value.
+*   **Eco-Points**: Accumulate points for every gram of recycled material.
+*   **Redemption**: Exchange points for store discounts, gift cards, or donate them to charity.
+*   **Transparent Ledger**: Full history of your environmental contribution.
+
+---
+
+## 📸 App Gallery
+
+<div align="center"> 
+  <table>
+    <tr>
+      <td align="center"><img src="screenshots/IMG_1340.jpg" width="250" alt="Process Flow"/><br/><i>Secure Authentication</i></td>
+      <td align="center"><img src="screenshots/IMG_1341.jpg" width="250" alt="Dashboard"/><br/><i>Home & Impact Summary</i></td>
+      <td align="center"><img src="screenshots/IMG_1342.jpg" width="250" alt="Map View"/><br/><i>Nearby Kiosks</i></td>
+    </tr>
+    <tr>
+      <td align="center"><img src="screenshots/IMG_1343.jpg" width="250" alt="Scanner"/><br/><i>Smart AI Scanner</i></td>
+      <td align="center"><img src="screenshots/IMG_1344.jpg" width="250" alt="Scanning"/><br/><i>Live Object Detection</i></td>
+      <td align="center"><img src="screenshots/IMG_1346.jpg" width="250" alt="Success"/><br/><i>Deposit Confirmation</i></td>
+    </tr>
+    <tr>
+      <td align="center"><img src="screenshots/IMG_1347.jpg" width="250" alt="Wallet"/><br/><i>Points & Rewards</i></td>
+      <td align="center"><img src="screenshots/IMG_1348.jpg" width="250" alt="Leaderboard"/><br/><i>Community Rankings</i></td>
+      <td align="center"><img src="screenshots/IMG_1352.jpg" width="250" alt="Profile"/><br/><i>User Profile & Stats</i></td>
+    </tr>
+  </table>
 </div>
 
 ---
 
-## 💡 The Problem
-We all want to recycle, but the process is often **confusing, unrewarding, and isolated**.  
-*Where is the nearest bin? Can I recycle this plastic? What's in it for me?*  
-Reclaimer solves this by turning recycling into a **seamless, gamified experience**.
+## 🛠️ Technology Stack
+Built for speed, scale, and user delight.
 
-## ✨ Key Features
-
-### 1. AI-Powered Smart Scanning
-<table border="0">
-  <tr>
-    <td width="300"><img src="assets/readme-images/scan_preview.png" width="100%" alt="Smart Scanner" style="border-radius: 10px;"></td>
-    <td>
-      <h3>Scan & Earn instantly</h3>
-      <p>Simply point your camera at any recyclable item. Our <b>Smart Vision</b> identifies the material (PET, Aluminum, Glass) and tells you exactly how much it's worth. No more guessing—just scan, drop, and earn.</p>
-    </td>
-  </tr>
-</table>
-
-### 2. Interactive Impact Map
-<table border="0">
-  <tr>
-    <td>
-      <h3>Find Kiosks Near You</h3>
-      <p>Locate the nearest <b>Smart Recycling Kiosks</b> in seconds. Filter by material type, check live capacity status, and get turn-by-turn directions. Recycling has never been this accessible.</p>
-    </td>
-    <td width="300"><img src="assets/readme-images/feature_1.png" width="100%" alt="Map View" style="border-radius: 10px;"></td>
-  </tr>
-</table>
-
-### 3. Rewards Wallet & Marketplace
-<table border="0">
-  <tr>
-    <td width="300"><img src="assets/readme-images/feature_2.png" width="100%" alt="Digital Wallet" style="border-radius: 10px;"></td>
-    <td>
-      <h3>Your Trash, Your Treasure</h3>
-      <p>Track your <b>Eco-Points</b> in real-time. Redeem them for real-world value—discounts at partner stores, crypto tokens, or donate them to environmental charities directly from the app.</p>
-    </td>
-  </tr>
-</table>
-
-### 4. Community Leaderboards
-<table border="0">
-  <tr>
-    <td>
-      <h3>Compete for a Greener Future</h3>
-      <p>See where you stand among the top eco-warriors. Our <b>Podium-style leaderboard</b> celebrates the top recyclers every week. Earn badges, crowns, and bragging rights as you climb the ranks.</p>
-    </td>
-    <td width="300"><img src="assets/readme-images/feature_3.png" width="100%" alt="Leaderboard" style="border-radius: 10px;"></td>
-  </tr>
-</table>
+*   **Frontend**: React Native (Expo)
+*   **Maps**: Google Maps Platform
+*   **Animations**: Reanimated 3 & Skia
+*   **Navigation**: Expo Router
 
 ---
 
-## 🛠️ Tech Stack
-Built with modern, scalable technologies to ensure a premium user experience.
-
-- **Frontend**: React Native (Expo) - for cross-platform excellence.
-- **Maps**: Google Maps API - for precise location tracking.
-- **Animations**: Reanimated 3 - for buttery smooth 60fps interactions.
-- **Styling**: Custom Design System - implementing Glassmorphism and premium aesthetics.
+## 🌲 Future Scope
+*   **Partnership API**: Integration with municipal waste management for smart city data.
+*   **Crypto Integration**: Minting "Carbon Credits" on-chain for verified recycling.
+*   **Team Challenges**: Corporate sustainability leagues.
 
 ---
-
-## 🚀 Getting Started
-
-To run this project locally:
-
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/yaakulya123/reclaimer-mobileapp.git
-   ```
-
-2. **Install dependencies**
-   ```bash
-   cd reclaimer-mobileapp
-   npm install
-   ```
-
-3. **Run the app**
-   ```bash
-   npx expo start
-   ```
-
----
-*Built with 💚 by Team Reclaimer*
+*Built with 💚 for the Hackathon.*
