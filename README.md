@@ -4,13 +4,21 @@
 > **Hackathon 2026 Submission**  
 > *Sustainable. Social. Rewarding.*
 
+<!-- Placeholder for Demo Video -->
+<div align="center">
+  <a href="https://youtu.be/placeholder">
+    <img src="https://img.youtube.com/vi/placeholder/0.jpg" alt="Watch the Demo" style="border-radius: 15px; width: 100%; max-width: 600px; shadow: 0 4px 8px rgba(0,0,0,0.2);">
+  </a>
+  <p><i>📺 Watch our 2-minute demo video</i></p>
+</div>
+
 ---
 
 ## 🌎 The Mission: Why This Matters
 We are facing a global waste crisis. The statistics are alarming:
-*   **62 Million Tonnes** of e-waste are generated annually, with only **22.3%** properly recycled.
-*   **91% of plastic** ever produced has not been recycled.
-*   By 2050, there could be more plastic in the ocean than fish (by weight).
+*   **62 Million Tonnes** of e-waste are generated annually, with only **22.3%** properly recycled ([UN Global E-waste Monitor](https://ewastemonitor.info/)).
+*   **91% of plastic** ever produced has not been recycled ([National Geographic / OECD](https://www.oecd.org/en/topics/plastic-pollution.html)).
+*   By 2050, there could be **more plastic in the ocean than fish** by weight ([Ellen MacArthur Foundation](https://www.ellenmacarthurfoundation.org/)).
 
 The core problem isn't just infrastructure—it's **participation**. Recycling is often confusing, inconvenient, and unrewarding for the average person. 
 
@@ -76,6 +84,39 @@ Built with a modern, scalable architecture to ensure a premium user experience.
 *   **React Native Maps**: Google Maps integration for the Kiosk Finder feature.
 *   **Expo Router**: File-based routing for seamless deep linking and navigation stacks.
 *   **Location Services**: `expo-location` for real-time user positioning and geofencing.
+
+---
+
+## 💡 Challenges & Accomplishments
+
+### The "Camera Overlay" Hurdle
+One of our biggest technical challenges was layering the UI over the camera stream smoothly. React Native's `CameraView` initially blocked our custom overlays (mask, text, guides). We solved this by implementing `StyleSheet.absoluteFill` with precise z-indexing, allowing us to create a transparent "cutout" effect for the scanning frame while keeping the rest of the UI interactive.
+
+### Accomplishments We're Proud Of
+*   **Interactive Bottom Sheet**: Building a custom draggable bottom sheet from scratch using `PanResponder` and `Animated` API to ensure a native-like feel without heavy external libraries.
+*   **Performance**: Achieving 60fps animations even while the camera is active and processing inputs.
+
+---
+
+## 🚀 How to Run Locally
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yaakulya123/reclaimer-mobileapp.git
+   cd reclaimer-mobileapp
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the server**
+   ```bash
+   npx expo start
+   ```
+
+4. **Run on Device**: Scan the QR code with **Expo Go** (Android) or the Camera app (iOS).
 
 ---
 
