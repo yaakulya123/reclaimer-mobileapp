@@ -42,27 +42,23 @@ The core problem isn't just infrastructure—it's **participation**. Recycling i
 
 ---
 
-## 🚀 Innovative Features
+## 🚀 Key Features
 
-### 1. Smart Vision Scanning (Computer Vision)
-*   **AI Recognition**: Instantly detects Plastic (PET), Aluminum, and Glass using `expo-camera`.
-*   **Live Valuation**: Shows real-time point value for every item before you deposit.
+### 1. Zero-Friction Scan & Earn
+*   **Computer Vision**: Computer vision detects recyclable items (Plastic, Aluminum, Glass) in real-time.
+*   **Instant Valuation**: Users see the exact "Eco-Point" value of an item *before* they even drop it, removing ambiguity and gamifying the act of collection.
 
-### 2. Gamified Ecosystem (Behavioral Economics)
-*   **Leaderboards**: Compete with friends and your local community.
-*   **Impact Dashboard**: Visualize your CO₂ offset in real-world terms (e.g., "Car miles saved").
+### 2. Hyper-Local Material Mapping
+*   **Stream-Specific Discovery**: Most map apps just show "Recycling Centers". Reclaimer filters by specific streams—identifying which kiosks accept **E-Waste**, **Textiles**, or **Beverage Containers**. 
+*   **Anti-Wishcycling**: By directing users to stream-specific bins, we reduce contamination rates caused by "wishcycling" (guessing where items go).
 
-### 3. Rewards Wallet (FinTech Integration)
-*   **Eco-Points**: Accumulate points for every gram of recycled material.
-*   **Redemption**: Exchange points for store discounts or donate to charity.
+### 3. Dual-Metric Impact Wallet
+*   **Beyond Currency**: Our wallet tracks two distinct metrics: **Financial Reward** (Points redeemable for goods) and **Environmental Debt Paid** (CO2 offset in kg). 
+*   **Tangible Visualization**: We convert abstract carbon metrics into relatable stats (e.g., "Equivalent to planting 3 trees"), making the impact felt.
 
-### 4. AR "Prep-Check" (Augmented Reality)
-*   **Interactive Guidance**: Not sure if a bottle needs rinsing? Our AR layer overlays 3D instructions directly on the object (e.g., "Remove Cap", "Rinse") to ensure nearly **0% contamination rates**.
-*   **Geolocation Pins**: See floating AR indicators for nearby public bins in crowded spaces.
-
-### 5. Smart-City Grid Integration (IoT)
-*   **Dynamic Routing**: The app talks to Smart Kiosks to detect fill levels. If a bin is full, the app automatically reroutes the user to the next nearest empty kiosk.
-*   **Demand signaling**: Partners can signal high demand for specific materials (e.g., "Need more Aluminum"), temporarily boosting point values (x2 Multiplier) to incentivize collection.
+### 4. Interactive Knowledge Hub
+*   **Gesture-Controlled Guide**: The scanner features a draggable, gesture-based bottom sheet that provides on-demand education.
+*   **Dynamic Rules**: Real-time updates on what can be recycled, accessible with a simple swipe, ensuring users are always informed at the moment of action.
 
 ---
 
